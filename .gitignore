@@ -1,0 +1,6 @@
+config.json
+service-account.json
+app.log
+__pycache__/*
+.venv/
+venv/
