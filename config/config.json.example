@@ -1,0 +1,29 @@
+{
+    "api_key": "ZOOM_API_KEY",
+    "api_secret": "ZOOM_API_SECRET",
+    "api_base_url": "https://api.zoom.us/v2",
+    "events_url": "THE URL TO RECEIVE WEBHOOKS LIKE /event_registration",
+    "google_data": {
+        "sheet_key": "THE_GOOGLE_SHEET_IDENTIFIER",
+        "worksheet_name": "WORKSHEET_NAME_TO_FIND_INFO",
+        "columns": {
+            "time_id": "G",
+            "registrant_id": "M",
+            "registrant_status": "K",
+            "registrant_data": "N",
+            "registrant_link": "L",
+            "registrant_key": "O"
+        }
+    },
+    "meetings_information": {
+        "MEETING_ID_GOES_HERE": {
+            "time_id": 1
+        },
+        "MEETING_ID_GOES_HERE": {
+            "time_id": 1
+        },
+        "MEETING_ID_GOES_HERE": {
+            "time_id": 2
+        }
+    }
+}
