@@ -1,5 +1,5 @@
-config.json
-service-account.json
+*/config.json
+*/service-account.json
 app.log
 __pycache__/*
 .venv/
