@@ -9,7 +9,7 @@ def generate_jwt(key, secret):
     payload = {"iss": key, "exp": int(time.time() + 3600)}
 
     token = jwt.encode(payload, secret, algorithm="HS256", headers=header)
-    return token.decode("utf-8")
+    return token
 
 
 def is_valid_uuid(uuid_to_test, version=4):
