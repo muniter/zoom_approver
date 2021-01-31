@@ -21,7 +21,7 @@ logging.basicConfig(
 )
 
 # Getting the config variables
-with open('config.json') as config_file:
+with open('./config/config.json') as config_file:
     config_data = json.load(config_file)
 
 # Zoom Data
@@ -45,7 +45,7 @@ for key, val in COLUMNS.items():
         val_numeric = gspread.utils.a1_to_rowcol(val_formatted)[1]
     COLUMNS[key] = (val, val_numeric)
 
-GC = gspread.service_account('./service-account.json')
+GC = gspread.service_account('./config/service-account.json')
 # Sheet and Worksheet
 SH = GC.open_by_key(SHEET_KEY)
 WS = SH.worksheet(WORKSHEET_NAME)

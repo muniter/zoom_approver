@@ -27,3 +27,9 @@ Esta aplicación recibe un webhook de parte de Zoom en el que le informa cada cr
     1. Compartir el Sheet al Service Account
 1. Configurar un Reverse Proxy con SSL para recibir los eventos.
 1. Llenar el archivo de Configuración
+
+## Instrucciones
+
+1. Configurar `config/config.json.example' y renombrar a `config/config.json`
+1. Agregar las credenciales JSON de Google Service Account en un archivo con nombre `config/service-account.json`
+1. Para iniciar el programa `python3 main.py`
