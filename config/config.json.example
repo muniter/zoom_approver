@@ -6,13 +6,14 @@
     "google_data": {
         "sheet_key": "THE_GOOGLE_SHEET_IDENTIFIER",
         "worksheet_name": "WORKSHEET_NAME_TO_FIND_INFO",
+        "log_worksheet_name": "LOG_WORKSHEET_NAME",
         "columns": {
-            "time_id": "G",
-            "registrant_id": "M",
-            "registrant_status": "K",
-            "registrant_data": "N",
-            "registrant_link": "L",
-            "registrant_key": "O"
+            "time_id": "time_id",
+            "registrant_id": "registrant_id",
+            "registrant_status": "registrant_status",
+            "registrant_data": "registrant_data",
+            "registrant_link": "registrant_link",
+            "registrant_key": "registrant_key"
         }
     },
     "meetings_information": {

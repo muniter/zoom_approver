@@ -36,19 +36,21 @@ MEETINGS_IDS = [int(m_id) for m_id in MEETINGS_INFORMATION.keys()]
 GOOGLE_DATA = config_data["google_data"]
 SHEET_KEY = GOOGLE_DATA["sheet_key"]
 WORKSHEET_NAME = GOOGLE_DATA["worksheet_name"]
+# LOG_WORKSHEET_NAME = GOOGLE_DATA["log_worksheet_name"]
 COLUMNS = GOOGLE_DATA["columns"]
+
+# Google Sheet Setup
+GC = gspread.service_account('./config/service-account.json')
+# Sheet and Worksheet object
+SH = GC.open_by_key(SHEET_KEY)
+WS = SH.worksheet(WORKSHEET_NAME)
+# WS_LOG = SH.worksheet(LOG_WORKSHEET_NAME)
 
 # Replace column letter from config with tupple (number, letter)
 for key, val in COLUMNS.items():
-    if len(val) == 1:
-        val_formatted = str(val) + '1'
-        val_numeric = gspread.utils.a1_to_rowcol(val_formatted)[1]
-    COLUMNS[key] = (val, val_numeric)
-
-GC = gspread.service_account('./config/service-account.json')
-# Sheet and Worksheet
-SH = GC.open_by_key(SHEET_KEY)
-WS = SH.worksheet(WORKSHEET_NAME)
+    # Find the column name (first row)
+    val_cell = WS.find(val, in_row=1)
+    COLUMNS[key] = (val, val_cell.col)
 
 app = Flask(__name__)
 
@@ -149,15 +151,15 @@ def registration_approver(registrant, data, meeting_id, key):
     try:
         find_key = WS.find(key, in_column=COLUMNS["registrant_key"][1])
         registrant_row = find_key.row
+        ws_registrant_data = WS.row_values(registrant_row)
     except CellNotFound as e:
         logging.info(
-            f'Did not found key {key} in the database',
+            f'Did not found key {key} in the database ABORTING',
         )
         return
 
     # Here the key has been found
     # Let's check the owner hasn't registered
-    ws_registrant_data = WS.row_values(registrant_row)
 
     # Information
     name = ws_registrant_data[0]
@@ -181,6 +183,7 @@ def registration_approver(registrant, data, meeting_id, key):
             f'The registrant "{name}" has not registered will '
             'continue proccess.'
         )
+
         # Check if registerint to the correct meeting
         print("Registrant time ID in sheets", registrant_time_id)
         correct_time_id = MEETINGS_INFORMATION[str(meeting_id)]["time_id"]
@@ -189,14 +192,15 @@ def registration_approver(registrant, data, meeting_id, key):
                 f'The registrant "{name}" is in the correct meeting '
                 f'will now apporve the registration.'
             )
-            validate = validate_registrant_zoom(
+
+            approve = approve_registrant_zoom(
                 registrant["id"],
                 registrant["email"],
                 meeting_id,
                 registrant
             )
 
-            if validate:
+            if approve:
                 STATUS = 'REGISTERED'
                 # Update the values in the sheet/database
                 WS.update_cell(
@@ -213,11 +217,6 @@ def registration_approver(registrant, data, meeting_id, key):
                     registrant_row,
                     COLUMNS["registrant_status"][1],
                     STATUS
-                )
-                WS.update_cell(
-                    registrant_row,
-                    COLUMNS["registrant_link"][1],
-                    registrant["join_url"]
                 )
             else:
                 STATUS = 'PENDING'
@@ -236,11 +235,6 @@ def registration_approver(registrant, data, meeting_id, key):
                     COLUMNS["registrant_status"][1],
                     STATUS
                 )
-                WS.update_cell(
-                    registrant_row,
-                    COLUMNS["registrant_link"][1],
-                    registrant["join_url"]
-                )
 
             logging.info(
                 f'Succesfully updated data row: {registrant_row} '
@@ -256,8 +250,8 @@ def registration_approver(registrant, data, meeting_id, key):
     return
 
 
-def validate_registrant_zoom(id, email, meeting_id, registrant):
-    """Validate the registrant against zoom api.
+def approve_registrant_zoom(id, email, meeting_id, registrant):
+    """Approve the registrant against zoom api.
 
     :id: The registrant id (recived in the webhook)
     :mail: The registrant email (recived in the webhook)
@@ -283,6 +277,10 @@ def validate_registrant_zoom(id, email, meeting_id, registrant):
     url = API_BASE_URL + '/meetings/' + str(meeting_id) + '/registrants/status'
 
     response = requests.put(url=url, json=data, headers=headers)
+    logging.info(
+        f'Response from Zoom API request Status Code: {response.status_code} '
+        f'Respnse content: {response.text}'
+    )
     if response.status_code == 204:
         logging.info(
             f'Succesfully approved registrant with id: {id} '
