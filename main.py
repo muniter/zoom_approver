@@ -279,7 +279,7 @@ def approve_registrant_zoom(id, email, meeting_id, registrant):
     response = requests.put(url=url, json=data, headers=headers)
     logging.info(
         f'Response from Zoom API request Status Code: {response.status_code} '
-        f'Respnse content: {response.text}'
+        f'Response content: {response.text}'
     )
     if response.status_code == 204:
         logging.info(

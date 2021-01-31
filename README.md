@@ -32,4 +32,17 @@ Esta aplicación recibe un webhook de parte de Zoom en el que le informa cada cr
 
 1. Configurar `config/config.json.example' y renombrar a `config/config.json`
 1. Agregar las credenciales JSON de Google Service Account en un archivo con nombre `config/service-account.json`
-1. Para iniciar el programa `python3 main.py`
+1. Usar el contenedor:
+
+```bash
+$ cd zoom_approver
+$ docker image build -t zoom_approver/zoom_approver:v1 .
+$ docker run --name zoom_approver --volume $(pwd)/config:/usr/src/app/config -p 5000:5000 zoom_app
+rover/zoom_approver:v1
+```
+
+Ejemplo de Docker Compose TODO
+
+```yaml
+
+```
