@@ -37,12 +37,22 @@ Esta aplicación recibe un webhook de parte de Zoom en el que le informa cada cr
 ```bash
 $ cd zoom_approver
 $ docker image build -t zoom_approver/zoom_approver:v1 .
-$ docker run --name zoom_approver --volume $(pwd)/config:/usr/src/app/config -p 5000:5000 zoom_app
-rover/zoom_approver:v1
+$ docker run --name zoom_approver --volume $(pwd)/config:/usr/src/app/config -p 5000:5000 zoom_approver/zoom_approver:v1
+# OR Can also use from DockerHub
+$ docker run --name zoom_approver --volume $(pwd)/config:/usr/src/app/config -p 5000:5000 muniter/zoom_approver:v1
 ```
 
 Ejemplo de Docker Compose TODO
 
 ```yaml
-
+  zoom-approver:
+    container_name: zoom-approver
+    image: muniter/zoom_approver:v1
+    volumes:
+      - $CONFIG_DIR/zoom-approver/config:/usr/src/app/config
+    ports:
+      - 5000:5000
+    restart: unless-stopped
+    networks:
+      - net
 ```
