@@ -110,22 +110,22 @@ def new_registration(data):
         # Get all the answers to the custom questions and find which are keys
         answers = []
         for question in registrant["custom_questions"]:
-            answer = question["value"]
+            ans = question["value"]
             # Remove trailing and leading whitespace
-            answer = answer.lstrip()
-            answer = answer.rstrip()
-            if len(answer) == 10:
-                answers.append(answer)
+            ans = ans.lstrip()
+            ans = ans.rstrip()
+            if len(ans) == 10:
+                answers.append(ans)
 
-        if any(answer):
-            if len(answer) == 1:
-                key = answer[0]
+        if any(answers):
+            if len(answers) == 1:
+                key = answers[0]
                 logging.info(
                     f'One of the answer matches a valid key, proceeding '
                     f'with approval procedure, key: {key}'
                 )
                 registration_approver(registrant, data, meeting_id, key)
-            elif len(answer) > 1:
+            elif len(answers) > 1:
                 logging.info(
                     'More than one of the answers provided is a valid key '
                     f'answers: {answers}'
