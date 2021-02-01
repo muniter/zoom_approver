@@ -108,8 +108,15 @@ def new_registration(data):
             f"Meeting ID matched, received {meeting_id}"
         )
         # Get all the answers to the custom questions and find which are keys
-        answers = [q["value"] for q in registrant["custom_questions"]]
-        answer = list(filter(lambda x: len(x) == 10, answers))
+        answers = []
+        for question in registrant["custom_questions"]:
+            answer = question["value"]
+            # Remove trailing and leading whitespace
+            answer = answer.lstrip()
+            answer = answer.rstrip()
+            if len(answer) == 10:
+                answers.append(answer)
+
         if any(answer):
             if len(answer) == 1:
                 key = answer[0]
