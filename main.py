@@ -111,9 +111,10 @@ def new_registration(data):
         answers = []
         for question in registrant["custom_questions"]:
             ans = question["value"]
-            # Remove trailing and leading whitespace
+            # Remove trailing and leading whitespace and make lower case
             ans = ans.lstrip()
             ans = ans.rstrip()
+            ans = ans.lower()
             if len(ans) == 10:
                 answers.append(ans)
 
